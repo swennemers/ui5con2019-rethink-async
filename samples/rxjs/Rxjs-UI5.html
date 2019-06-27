@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Rx.js - UI5 Demos</title>
   <style>
@@ -9,44 +10,54 @@
     overflow: hidden;
     background-image: url("../../slides/images/UI5Logo_blue_desktop.png");
   }
+
   #app {
-    margin: 0 50px;
-    width: 300px;
-    height: 300px;
+      margin: 0 20px;
+      width: 200px;
+      height: 200px;
     border: 1px solid black;
     transform: translateY(60px);
   }
+
   .grid-container {
     display: grid;
-    grid-template-columns: 48%  4% 48%;
+      grid-template-columns: 48% 4% 48%;
     grid-template-areas: ". .";
   }
+
   #asyncFlow {
     grid-column-start: 1
   }
+
   #liveSearch {
     grid-column-start: 3
   }
+
   svg {
     z-index: -1;
   }
+
   #controls {
     width: 250px;
     margin: 0 auto;
   }
+
   #counter {
     margin-left: 200px;
   }
+
   button {
-    padding: 20px;
+      padding: 10px;
     font-size: large;
-    margin: 20px;
+      margin: 10px;
     display: block;
   }
+
   #info {
     position: relative;
     top: 350px;
   }
+
   pre {
     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.8);
   }
@@ -57,19 +68,16 @@
   <script src="./rx.all.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.4/raphael-min.js"></script>
   <script src="connection.js"></script>
-  <script id="sap-ui-bootstrap"
-			type="text/javascript"
-			src="https://sapui5.hana.ondemand.com/resources/sap-ui-core.js"
-			data-sap-ui-theme="sap_belize"
-			data-sap-ui-noConflict="true"
-			data-sap-ui-xx-bindingSyntax="complex"
+  <script id="sap-ui-bootstrap" type="text/javascript" src="https://sapui5.hana.ondemand.com/resources/sap-ui-core.js"
+    data-sap-ui-theme="sap_belize" data-sap-ui-noConflict="true" data-sap-ui-xx-bindingSyntax="complex"
 			data-sap-ui-libs="sap.m">
 	</script>
 	<script src="./sapui5.rx.js"></script>
 </head>
+
 <body>
     <div class="grid-container">
-      <div id="asyncFlow">
+    <div id="asyncFlow" >
           <h2>Rx.js - UI5 Demo - inspired by <a href="http://github.com/bahmutov/draw-cycle"> Draw Cycle </a></h2>
           <p>Click on "Increment" or "Decrement" buttons and see how the eventstreams are combined.</p>
 
@@ -77,7 +85,8 @@
           <div id="info">
             <p>The to SAPUI5 adapted example is taken from "Explicit dataflow" section of the website,
               it uses a simple <a href="./sapui5.rx.js"> Simple SAPUI5 - Rx.js Adapter </a> </p>
-            <p><pre><code class="hljs javascript">
+        <p>
+          <pre id="flowCode"><code class="hljs javascript">
             const decrement$ = decrementBtn.press$.map(ev => -1);
             const increment$ = incrementBtn.press$.map(ev => +1);
 
@@ -87,16 +96,17 @@
             count$.subscribe(count =>
               oJSONModel.setProperty("/count", count);
             );
-          </code></pre></p>
+          </code></pre>
+        </p>
           </div>
       </div>
-      <div id="liveSearch">
+    <div id="liveSearch" onclick="scaleLiveSearch()">
           <h2>Wikipedia live search with SAPUI5 and Rx.js</h2>
-          <div id="content"  />
 
           <div class="sapUiSmallMargin">
             <p>Dramatically simplify async coordination, live search in 8 lines:</p>
-            <p><pre><code class="hljs javascript">
+        <p>
+          <pre id="liveSearchCode"><code class="hljs javascript">
             var newValue$ = input.liveChange$.map(ev => {
               return ev.getParameters().value;
             }).filter(function (text) {
@@ -107,42 +117,45 @@
             var search$ = newValue$.flatMapLatest(searchWikipedia);
 
             search$.subscribe(...);
-          </code></pre></p>
+            </code></pre>
+        </p>
           </div>
+      <div id="content" />
       </div>
     </div>
 
 
   <script>
     var drawing = {
-      setValue: function () {},
+      setValue: function () { },
       moveEvent: function (_, label, x) {
         return Promise.resolve(x)
       }
     }
       var decrementBtn = new sap.m.Button({
-        text:'Decrement',
-      }).addStyleClass("sapUiMediumMargin");
+      text: 'Decrement',
+    }).addStyleClass("sapUiSmallMargin");
       decrementBtn.placeAt('app');
       //strait forward way
       var decrementClick$ = sap.ui.createObservable(decrementBtn, 'press');
 
       var incrementBtn = new sap.m.Button({
-        text:'Increment',
-      }).addStyleClass("sapUiMediumMargin");
+      text: 'Increment',
+    }).addStyleClass("sapUiSmallMargin");
       incrementBtn.placeAt('app');
       sap.ui.mixinObservableEvents(incrementBtn);
 
       var input = new sap.m.Text({
-        width : "100px",
-        text : "Count: {/count}"
-      }).addStyleClass("sapUiMediumMargin");
+      width: "100px",
+      text: "Count: {/count}"
+    }).addStyleClass("sapUiSmallMargin");
       input.placeAt('app');
 
 
       // intent
       const decrement$ = decrementClick$
         .flatMap(function (ev) {
+          ev.cancelBubble();
           return Rx.Observable.fromPromise(
             drawing.moveEvent(drawing.c1, 'event', ev)
           )
@@ -176,7 +189,7 @@
 
       // model
       const count$ = action$.startWith(0)
-        .scan(function (x,y) { return x+y })
+      .scan(function (x, y) { return x + y })
         .tap(function (x) { drawing.setValue(x) })
         .flatMap(function (x) {
           return Rx.Observable.fromPromise(
@@ -185,12 +198,12 @@
         });
 
       // view
-      var state = new sap.ui.model.json.JSONModel({count : 0});
+    var state = new sap.ui.model.json.JSONModel({ count: 0 });
       sap.ui.getCore().setModel(state);
 
       const bindingUpdate$ = count$.flatMap(function (x) {
         return Rx.Observable.fromPromise(
-          drawing.moveEvent(drawing.c7, "setText", x, 'count\n.setText("'+x+'")')
+        drawing.moveEvent(drawing.c7, "setText", x, 'count\n.setText("' + x + '")')
         )
       }).subscribe(count => {
         state.setProperty("/count", count)
@@ -203,9 +216,9 @@
       var w = window,
       d = document,
       e = d.documentElement,
-      g = d.getElementsByTagName('body')[0],
-      x = w.innerWidth || e.clientWidth || g.clientWidth,
-      y = w.innerHeight|| e.clientHeight|| g.clientHeight;
+        g = d.getElementById('asyncFlow'),
+        x = g.clientWidth,
+        y = w.innerHeight || e.clientHeight || g.clientHeight;
 
       if (y < 700) {
         y = 700
@@ -280,28 +293,28 @@
       }
       drawing.moveEvent = moveEvent;
 
-      var decClicks = paper.rect(400, 150, 100, 50)
+      var decClicks = paper.rect(300, 150, 100, 50)
       decClicks.attr('fill', '#ffe')
       decClicks.attr('stroke', '#f00')
-      var decClicksText = paper.text(450, 175)
+      var decClicksText = paper.text(350, 175)
       decClicksText.attr({ text: 'map\nev => -1', 'font-size': '12px' })
-      var decrementsText = paper.text(550, 160)
+      var decrementsText = paper.text(450, 160)
       decrementsText.attr({ text: 'decrements$', 'font-size': '15px' })
 
-      var incClicks = paper.rect(400, 250, 100, 50)
+      var incClicks = paper.rect(300, 250, 100, 50)
       incClicks.attr('fill', '#ffe')
       incClicks.attr('stroke', '#f00')
-      var incClicksText = paper.text(450, 275)
+      var incClicksText = paper.text(350, 275)
       incClicksText.attr({ text: 'map\nev => +1', 'font-size': '15px' })
-      var incrementsText = paper.text(550, 285)
+      var incrementsText = paper.text(450, 285)
       incrementsText.attr({ text: 'increments$', 'font-size': '15px' })
 
-      var actions = paper.rect(600, 200, 100, 50)
+      var actions = paper.rect(500, 200, 100, 50)
       actions.attr('fill', '#ffe')
       actions.attr('stroke', '#f00')
-      var actionsText = paper.text(650, 225)
+      var actionsText = paper.text(550, 225)
       actionsText.attr({ text: 'merge', 'font-size': '15px' })
-      var actions$Text = paper.text(690, 260)
+      var actions$Text = paper.text(590, 260)
       actions$Text.attr({ text: 'actions$', 'font-size': '15px' })
 
       // paper.connection(circle, circle2, '#00f')
@@ -314,49 +327,49 @@
       drawing.c4 = paper.connection(incClicks, actions, '#333')
 
       // model
-      var scan = paper.rect(550, 400, 100, 50)
+      var scan = paper.rect(450, 400, 100, 50)
       scan.attr('fill', '#ffe')
       scan.attr('stroke', '#0f0')
-      var scanText = paper.text(600, 425)
+      var scanText = paper.text(500, 425)
       scanText.attr({ text: 'scan\n(x,y) => x+y', 'font-size': '15px' })
 
-      var valueText = paper.text(680, 420)
+      var valueText = paper.text(580, 420)
       valueText.attr({ text: 'value\n0', 'font-size': '15px' })
       drawing.setValue = function (value) {
         valueText.attr('text', 'value\n' + value)
       }
 
-      var count$Text = paper.text(520, 410)
+      var count$Text = paper.text(420, 410)
       count$Text.attr({ text: 'count$', 'font-size': '15px' })
 
       drawing.c5 = paper.connection(actions, scan, '#333')
 
       // view
-      var vtree = paper.rect(360, 550, 340, 150)
+      var vtree = paper.rect(190, 490, 340, 150)
       vtree.attr('fill', '#ffe')
       vtree.attr('stroke', '#00f')
-      var vtreeText = paper.text(370, 625)
+      var vtreeText = paper.text(200, 555)
       vtreeText.attr({
-        text: 'count$.subscribe(i =>\n'+
-              '    oJSONModel.setProperty("/count", i);\n'+
+        text: 'count$.subscribe(i =>\n' +
+          '    oJSONModel.setProperty("/count", i);\n' +
               ');',
         'font-size': '15px',
         'font-family': 'monospace',
         'white-space': 'pre',
         'text-anchor': 'start'
       })
-      var vtree$Text = paper.text(320, 635)
+      var vtree$Text = paper.text(140, 565)
       vtree$Text.attr({ text: 'databinding', 'font-size': '15px' })
 
       drawing.c6 = paper.connection(scan, vtree, '#333')
       drawing.c7 = paper.connection(vtree, document.querySelector('#app'), '#333')
 
       // Intent / Model / View blocks
-      var intentBlock = paper.rect(380, 120, 350, 200)
+      var intentBlock = paper.rect(280, 120, 350, 200)
       intentBlock.attr({
         stroke: '#f00'
       });
-      var intentText = paper.text(700, 130)
+      var intentText = paper.text(600, 130)
       intentText.attr({
         text: 'Intent',
         'font-size': '15px',
@@ -364,11 +377,11 @@
         stroke: 'none'
       })
 
-      var modelBlock = paper.rect(380, 330, 350, 170)
+      var modelBlock = paper.rect(280, 330, 350, 150)
       modelBlock.attr({
         stroke: '#0f0'
       });
-      var modelText = paper.text(700, 340)
+      var modelText = paper.text(600, 340)
       modelText.attr({
         text: 'Model',
         'font-size': '15px',
@@ -376,7 +389,7 @@
         stroke: 'none'
       })
 
-      var viewText = paper.text(650, 560)
+      var viewText = paper.text(480, 500)
       viewText.attr({
         text: 'JSONModel',
         'font-size': '15px',
@@ -389,7 +402,7 @@
 
 <script>
     // Search Wikipedia for a given term
-    function searchWikipedia (term) {
+    function searchWikipedia(term) {
       return jQuery.ajax({
         url: 'https://en.wikipedia.org/w/api.php',
         dataType: 'jsonp',
@@ -402,20 +415,20 @@
     }
 
     var input = new sap.m.Input({
-      width : "90%",
-      valueLiveUpdate : true
+      width: "90%",
+      valueLiveUpdate: true
     }).addStyleClass("sapUiSmallMargin").placeAt('content');
 
     sap.ui.mixinObservableEvents(input);
 
     var resultList = new sap.m.List({
-      headerText : 'Wikipedia Entries',
-      width : "90%",
-      items : [
+      headerText: 'Wikipedia Entries',
+      width: "90%",
+      items: [
         new sap.m.StandardListItem({
-          title : "No Data",
-          type : "Inactive",
-          press : function(){
+          title: "No Data",
+          type: "Inactive",
+          press: function () {
           }
         })
       ]
@@ -438,10 +451,10 @@
           var sLink = data[3][i];
           resultList.addItem(
             new sap.m.StandardListItem({
-              title : title,
-              description : data[2][i],
-              type : sLink ? "Active" : "Inactive",
-              press : function(){
+              title: title,
+              description: data[2][i],
+              type: sLink ? "Active" : "Inactive",
+              press: function () {
                 sap.m.URLHelper.redirect(sLink, true);
               }
             })
@@ -454,5 +467,27 @@
       }
     );
     </script>
+  <script>
+    function scale($Pre, sTranslateXY) {
+      if ($Pre.style.transform == ""){
+        $Pre.style.transform = "translate(" + sTranslateXY + ") scale(2)";
+      } else {
+        $Pre.style.transform = "";
+      }
+    }
+    function scaleLiveSearch() {
+      var $Pre = document.getElementById("liveSearchCode");
+      scale($Pre, "0px, 50px");
+    }
+    function scaleFlow(oClickEvent) {
+      if (!jQuery(oClickEvent.target).control()[0]){
+        //don't do it on UI5 controls
+        var $Pre = document.getElementById("flowCode");
+        scale($Pre, "300px, -50px");
+      }
+    }
+    document.getElementById("asyncFlow").addEventListener("click", scaleFlow);
+  </script>
 </body>
+
 </html>
