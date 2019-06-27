@@ -1,0 +1,9 @@
+.idea/
+*.iml
+*.iws
+*.eml
+.DS_Store
+**/node_modules/
+
+css/reveal.min.css
+js/reveal.min.js

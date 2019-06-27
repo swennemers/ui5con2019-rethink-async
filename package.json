@@ -1,0 +1,25 @@
+{
+  "name": "rethink.async.es2018",
+  "version": "1.0.0",
+  "description": "Rethink async! Level up with Reactive Programming in ES2018 - Conference Talk",
+  "main": "\"\"",
+  "scripts": {
+    "start": "http-server ./ -o http://127.0.0.1:5050/slides/index.html -d -p 5050"
+  },
+  "keywords": [
+    "ui5con",
+    "conference",
+    "es2018",
+    "async",
+    "reactive",
+    "javascript",
+    "iterators",
+    "generators"
+  ],
+  "author": "swennemers",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^0.11.1"
+  },
+  "dependencies": {}
+}

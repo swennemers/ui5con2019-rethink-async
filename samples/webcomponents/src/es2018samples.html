@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+		body {
+			margin: none;
+			padding: none;
+			overflow: hidden;
+			background-image: url("../../../slides/images/UI5Logo_blue_desktop.png");
+		}
+
+		#app {
+			margin: 0 50px;
+			width: 300px;
+			height: 300px;
+			border: 1px solid black;
+			transform: translateY(60px);
+		}
+
+		.grid-container {
+			display: grid;
+			grid-template-columns: 48% 4% 48%;
+			grid-template-areas: ". .";
+		}
+
+		#asyncFlow {
+			grid-column-start: 1
+		}
+
+		#liveSearch {
+			grid-column-start: 3
+		}
+
+		svg {
+			z-index: -1;
+		}
+
+		#controls {
+			width: 250px;
+			margin: 0 auto;
+		}
+
+		#counter {
+			margin-left: 200px;
+		}
+
+		button {
+			padding: 20px;
+			font-size: large;
+			margin: 20px;
+			display: block;
+		}
+
+		#info {
+			position: relative;
+			top: 350px;
+		}
+
+		pre {
+			box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.8);
+		}
+	</style>
+	<link rel="stylesheet" href="../../../slides/lib/css/monokai.css">
+
+	<script src="../../rxjs/raphael-min.js"></script>
+	<script src="../../rxjs/connection.js"></script>
+</head>
+
+<body>
+	<div class="grid-container">
+		<div id="asyncFlow">
+			<h2>ES2018 based Async Data Flow sample - inspired by <a href="http://github.com/bahmutov/draw-cycle"> Draw Cycle </a></h2>
+			<p>Click on "Increment" or "Decrement" buttons and see how the eventstreams are combined.</p>
+
+			<div id="app">
+				<ui5-button id="decrement" style="padding-bottom: 5px; width: 100px;">Decrement</ui5-button><br>
+				<ui5-button id="increment" style="padding-bottom: 5px; width: 100px;">Increment</ui5-button><br>
+				<ui5-input id="value" readonly value="Count: 0" style="width: 100px;"></ui5-input>
+			</div>
+
+			<div id="info">
+				<p>
+					<pre><code class="hljs javascript">
+	async function* model(incrementIterator, decrementIterator, startValue) {
+		var count = startValue;
+		for await (const action of merge([incrementIterator, decrementIterator])) {
+			yield count += action;
+		}
+	}
+	for await (const currentValue of model(
+		eventToValue(
+			fromEvent($plus, "click"),
+			1
+		),
+		eventToValue(
+			fromEvent($minus, "click"),
+			-1
+		),
+		0)
+	) {
+		$label.setAttribute("value", "Count: " + currentValue);
+	}
+						</code></pre>
+				</p>
+			</div>
+		</div>
+		<div id="liveSearch">
+			<h2>Wikipedia live search with ES2018 and UI5 Web Components</h2>
+			<ui5-input id="suggestions-input" show-suggestions placeholder="Search Wikipedia"></ui5-input>
+
+			<div class="sapUiSmallMargin">
+				<p>Async coordination of a live search in few lines:</p>
+				<p>
+					<pre><code class="hljs javascript">
+	async function* getEntries(inputIterator){
+		var tooSoon = false, last;
+		for await(const oEvent of inputIterator){
+			var sValue = oEvent.target.value;
+			if(!sValue || tooSoon) {
+				continue; //no value, or debounced
+			}
+			if(sValue === last){
+				continue; //distinct until changed
+			}
+			if(sValue.length < 3) {
+				continue; //not long enough
+			}
+			last = sValue;
+			yield await searchWikipedia(sValue);
+			tooSoon = true;
+			delay(500).then(function(){
+				tooSoon = false
+			});
+		}
+	}
+	for await(const mEntries of getEntries(fromEvent($Input, "input"))){
+		//...
+	}
+					</code></pre>
+				</p>
+			</div>
+		</div>
+	</div>
+	<script src="./flow-drawing.js"></script>
+	<script src="./autocomplete.js"></script>
+</body>
+
+</html>

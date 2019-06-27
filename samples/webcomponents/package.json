@@ -1,0 +1,23 @@
+{
+  "name": "ui5-webcomponents-starter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel src/*.html",
+    "build": "parcel build src/*.html --public-url ./"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/runtime-corejs2": "^7.4.5",
+    "@ui5/webcomponents": "^v0.13.1",
+    "axax": "^0.1.24"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/plugin-transform-runtime": "^7.4.4",
+    "parcel": "^1.12.3"
+  }
+}

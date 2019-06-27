@@ -1,0 +1,16 @@
+{
+    "presets": [
+        [
+            "@babel/env",
+            {
+                "useBuiltIns": "usage",
+                "targets": {
+                    "browsers": [
+                        "firefox > 57",
+                        "chrome > 63"
+                    ]
+                }
+            }
+        ]
+    ]
+}

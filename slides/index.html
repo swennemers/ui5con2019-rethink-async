@@ -1,0 +1,488 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+	<meta content="IE=edge" http-equiv="x-ua-compatible">
+
+	<title>Rethink async! Level up with Reactive Programming in ES2018</title>
+
+	<link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="css/reveal.css">
+	<link rel="stylesheet" href="css/theme/white.css">
+
+	<!-- Theme used for syntax highlighting of code -->
+	<link rel="stylesheet" href="lib/css/monokai.css">
+
+	<!-- Printing and PDF exports -->
+	<script>
+		var link = document.createElement('link');
+		link.rel = 'stylesheet';
+		link.type = 'text/css';
+		link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+		//link.href = window.location.search.match( /print/gi ) ? 'css/print/paper.css' : 'css/print/paper.css';
+		document.getElementsByTagName('head')[0].appendChild(link);
+	</script>
+
+	<style>
+		.ui5con.reveal {
+			font-size: 58px;
+		}
+
+		.ui5con.reveal,
+		.ui5con.reveal h1,
+		.ui5con.reveal h2,
+		.ui5con.reveal h3,
+		.ui5con.reveal h4,
+		.ui5con.reveal h5,
+		.ui5con.reveal h6 {
+			font-family: Arial, Helvetica, sans-serif;
+			text-transform: none;
+		}
+
+		.ui5con-alignleft .slides section,
+		.ui5con-alignleft .slides section>section {
+			text-align: start;
+		}
+
+		.ui5con.reveal code,
+		.ui5con.reveal pre {
+			font-family: Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace;
+			max-height: 700px;
+			font-size: 30px;
+		}
+
+		/* .reveal pre code {
+			} */
+		.ui5con-orange {
+			color: rgb(240, 171, 0);
+		}
+
+		.ui5con-title {
+			width: 48%;
+			text-align: start;
+			padding-left: 1%;
+			padding-top: 2%;
+			margin-left: 0;
+			font-size: 72px;
+			font-weight: bold;
+		}
+
+		.ui5con-speakertitle {
+			font-size: 30px;
+			text-align: start;
+			padding-left: 1%;
+			padding-top: 5%;
+		}
+
+		.ui5con-aligntop .ui5con-title {
+			padding-top: 20%;
+		}
+
+		.ui5con-logo {
+			width: 50%;
+			height: 100%;
+			position: absolute;
+			right: 2%;
+			top: 0;
+			background-image: url(images/UI5con.png);
+			background-repeat: no-repeat;
+			background-size: contain;
+		}
+
+		.ui5con-logo-left-bottom {
+			width: 50%;
+			height: 100%;
+			position: absolute;
+			left: 2%;
+			top: 700px;
+			background-image: url(images/UI5con.png);
+			background-repeat: no-repeat;
+			background-size: contain;
+		}
+
+		.ui5con-aligntop .ui5con-logo {
+			top: 44%;
+		}
+
+		h2.ui5con-divider {
+			text-align: start;
+			font-size: 92px;
+			padding-left: 2%;
+		}
+
+		.ui5con-aligntop h2.ui5con-divider {
+			padding-top: 23%;
+		}
+
+		.ui5con-thankyou {
+			font-size: 120px;
+			font-weight: bold;
+			text-align: start;
+			padding-left: 2%;
+		}
+
+		.ui5con-aligntop .ui5con-thankyou {
+			padding-top: 12%;
+		}
+
+		.ui5con-speakerdetails {
+			font-size: 36px;
+			text-align: start;
+			padding-top: 5%;
+			padding-left: 2%;
+		}
+
+		.chunk {
+			border: solid rgba(0, 0, 0, 0.2);
+			display: inline-block;
+			box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.5);
+			margin-right: 20px;
+		}
+	</style>
+
+</head>
+
+<body>
+	<div class="reveal ui5con">
+		<div class="slides">
+			<section data-background-image="./images/UI5Logo_blue_desktop.png">
+				<h1> Rethink async! </h1>
+				<h3>Level up with Reactive Programming in ES2018</h3>
+				<p>
+					<small>by Sebastian Wennemers
+						<br> <a href="https://twitter.com/S7nW7s">(@S7nW7s)</a>
+						<br> Architect SAPUI5 Flexibility
+					</small>
+				</p>
+				<div class="ui5con-logo-left-bottom"></div>
+			</section>
+			<section data-background-image="./images/UI5Logo_blue_desktop.png">
+				<div> Back in 2017 @ UI5con Frankfurt </div>
+				<img src="./images/ui5con2017FRA.png" />
+			</section>
+			<section data-background-image="./images/UI5Logo_blue_desktop.png">
+				<h1>Reactive?</h1>
+				<p class="fragment" data-fragment-index="1">Don't call us, we call you (Inversion of Control)</p>
+				<p class="fragment" data-fragment-index="2">Event driven</p>
+				<p class="fragment" data-fragment-index="3">Compose declarative Event streams<br> (instead of callback hell)</p>
+			</section>
+			<section data-background-iframe="../samples/rxjs/Rxjs-UI5.html" data-background-interactive></section>
+			<section data-background-image="./images/UI5Logo_blue_desktop.png" data-timing="50">
+				<h1>NOW we have ES2018</h1>
+				<p class="fragment" data-fragment-index="1">iterators & generators</p>
+				<p class="fragment" data-fragment-index="1">for of loops</p>
+				<p class="fragment" data-fragment-index="2">async - await</p>
+				<p class="fragment" data-fragment-index="3">async iterators & generators</p>
+				<p class="fragment" data-fragment-index="3">async for of loops</p>
+			</section>
+
+			<section data-background-image="./images/UI5Logo_blue_desktop.png">
+				<h3>Iterators (ES2015)</h3>
+				<pre>
+				<code class="javascript" data-trim data-noescape>
+var someIterableObject = {
+	[Symbol.iterator]: function(){
+		var i = 1;
+		return {
+			next: function() {
+				if (i <= 42) {
+					return {done: false, value: "Chunk " + i++ };
+				} else {
+					return {done: true};
+				}
+			}
+		}
+	}
+}
+				</code>
+			</pre>
+				<p> next():
+					<span class="chunk fragment fade-right" data-autoslide="3000">Chunk 1</span>
+					<span class="chunk fragment fade-right" data-autoslide="1000">Chunk 2</span>
+					<span class="chunk fragment fade-right" data-autoslide="1000">Chunk 3</span>
+					<span class="chunk fragment fade-right" data-autoslide="1000">...</span>
+					<span class="chunk fragment fade-right" data-autoslide="1000">Chunk 42</span>
+					<span class="chunk fragment fade-right">DONE</span>
+				</p>
+				<aside class="notes">
+					<ul>
+						<li>Based on the pattern</li>
+						<li>Came with ES6/2015, Symbol => a way to have special keys in an object, without the fear,
+							some downstream lib has used that key already</li>
+						<li>ES6 Iterables have conventions</li>
+						<li>object with a next function returning {done: false, value: "... "}; or {done: true};</li>
+						<li>available at the Symbol.iterator attribute/key</li>
+						<li>Array, Map, ... , implement it</li>
+					</ul>
+					<a href="https://exploringjs.com/es6/ch_iteration.html">iteration</a>
+				</aside>
+			</section>
+			<section data-background-image="./images/UI5Logo_blue_desktop.png">
+				<h3>Generators (ES2015)</h3>
+				<pre>
+				<code class="javascript" data-trim data-noescape>
+var someIterableObject = {
+	getChunksGeneratorFunction: function* (){ 	//returns an iterator
+		for (var i=1; i <= 42; i++) {
+			yield "Chunk " + i;		//next value
+		}
+		/* can be implicit */return; 		//done
+	}
+}
+				</code>
+			</pre>
+				<p> Yielding:
+					<span class="chunk fragment fade-right" data-autoslide="3000">Chunk 1</span>
+					<span class="chunk fragment fade-right" data-autoslide="1000">Chunk 2</span>
+					<span class="chunk fragment fade-right" data-autoslide="1000">Chunk 3</span>
+					<span class="chunk fragment fade-right" data-autoslide="1000">...</span>
+					<span class="chunk fragment fade-right" data-autoslide="1000">Chunk 42</span>
+					<span class="chunk fragment fade-right">DONE</span>
+				</p>
+				<aside class="notes">
+					<ul>
+						<li>Much simpler way to implement iterators, is using generators</li>
+						<li>Came with ES6/2015</li>
+						<li>function* indicated it being a generator</li>
+						<li>yield is the next value that is returned</li>
+						<li>Calling a generator function does not execute its body immediately; an iterator object for
+							the function is returned instead. </li>
+					</ul>
+					<a href="https://exploringjs.com/es6/ch_overviews.html#overview-entry-generators">generators</a>
+				</aside>
+			</section>
+			<section data-background-image="./images/UI5Logo_blue_desktop.png">
+				<h3>Working with iterators </h3>
+				<pre>
+				<code class="javascript" data-trim data-noescape>
+var iterator = someIterableObject[Symbol.iterator]();
+for (var result = iterator.next(); !result.done; result = iterator.next()) {
+	console.log(result.value);
+}
+				</code>
+			</pre>
+				<h3 class="fragment" data-fragment-index="1">for-of loop (ES2015)</h3>
+				<pre class="fragment" data-fragment-index="1">
+				<code class="javascript" data-trim data-noescape>
+for (var value of someIterableObject.getChunksGeneratorFunction()){
+	console.log(value)
+}
+				</code>
+			</pre>
+				<aside class="notes">
+					<ul>
+						<li>You can easily use iterators directly</li>
+						<li>But the for-of loop can handle it for you</li>
+					</ul>
+					<a href="https://exploringjs.com/es6/ch_for-of.html">for-of loop</a>
+				</aside>
+			</section>
+			<section data-background-image="./images/UI5Logo_blue_desktop.png">
+				<h3>Async / await (ES2017)</h3>
+				<pre>
+				<code class="javascript" data-trim data-noescape>
+function doSomethingAsync(){
+	//make some backend call, etc.
+	//return a promise
+	return Promise.resolve(5)
+}
+
+async function doAsyncStuff(url) {
+	try {
+		var iResolvedValue = await doSomethingAsync();
+		return iResolvedValue + 1; //will be wrapped into promise as it is an async function
+	}
+	catch (error) {
+		console.log("ERROR: " + error.stack);
+	}
+}
+				</code>
+			</pre>
+				<aside class="notes">
+					<ul>
+						<li>Simpler way to work with promises and structure source code</li>
+						<li>await oPromise</li>
+						<li>Open "parallel" execution in same control flow</li>
+						<li>async function returns a promise of its return value</li>
+						<li>Still necessary to understand PROMISES!</li>
+					</ul>
+					<a
+						href="https://exploringjs.com/es2016-es2017/ch_async-functions.html#_async-functions-and-callbacks">for-of
+						loop</a>
+				</aside>
+			</section>
+
+			<section data-background-image="./images/UI5Logo_blue_desktop.png">
+				<h2 class="ui5con-divider">Let's combine <span class="ui5con-orange">iteration + async/await</span></h2>
+			</section>
+
+			<section data-background-image="./images/UI5Logo_blue_desktop.png">
+				<h3>Async Iterators (ES2018)</h3>
+				<pre>
+				<code class="javascript" data-trim data-noescape>
+var someIterableObject = {
+	[Symbol.asyncIterator]: function(){
+		var i = 1;
+		return {
+			next: function() {
+				if (i <= 42) {
+					return Promise.resolve({done: false, value: "Chunk " + i++ });
+				} else {
+					return Promise.resolve({done: true});
+				}
+			}
+		}
+	}
+}
+				</code>
+			</pre>
+				<aside class="notes" data-markdown="">
+					* similar to normal iterator + async
+					* BUT resolves the iterator value
+					* To impress people: declarative pull streams
+					<a
+						href="https://exploringjs.com/es2018-es2019/ch_asynchronous-iteration.html#asynchronous-iteration-1">iteration</a>
+				</aside>
+			</section>
+			<section data-background-image="./images/UI5Logo_blue_desktop.png">
+				<h3>Async Generators (ES2018)</h3>
+				<pre>
+				<code class="javascript" data-trim data-noescape>
+function someAsyncOperation() {
+	/* something async */
+	Promise.resolve(1);
+}
+
+var someIterableObject = {
+	getAsyncChunksGeneratorFunction: async function* (){ 	//returns an async iterator
+		for (var i=1; i <= 42; i++) {
+			var value = await someAsyncOperation();	//next() return now with a promise
+			yield "Chunk " + i + value;	//resolves next value after someAsyncOperation
+		}
+		/* can be implicit */return; 			//done
+	}
+}
+				</code>
+			</pre>
+				<aside class="notes">
+					<ul>
+						<li>Allows Queuing of next() invocations (calling it more often than it resolved already values)
+						</li>
+						<li>BUT resolves the iterator value</li>
+					</ul>
+					<a
+						href="https://exploringjs.com/es2018-es2019/ch_asynchronous-iteration.html#asynchronous-iteration-1">iteration</a>
+				</aside>
+			</section>
+			<section data-background-image="./images/UI5Logo_blue_desktop.png">
+				<h3>Working with async iterators </h3>
+				<pre>
+				<code class="javascript" data-trim data-noescape>
+var iterator = someIterableObject[Symbol.asyncIterator]();
+iterator.next().then(function(result){
+	if (!result.done){
+		console.log(result.value);
+	}
+});
+				</code>
+			</pre>
+				<h3 class="fragment" data-fragment-index="1">Async for-of loop (ES2018)</h3>
+				<pre class="fragment" data-fragment-index="1">
+				<code class="javascript" data-trim data-noescape>
+for async (var value of someIterableObject.getAsyncChunksGeneratorFunction()){
+	console.log(value)
+}
+				</code>
+			</pre>
+				<aside class="notes">
+					<ul>
+						<li>You can easily use iterators directly, it will just return promisses</li>
+						<li>But the async for-of loop can handle it for you</li>
+					</ul>
+					<a href="https://exploringjs.com/es6/ch_for-of.html">for-of loop</a>
+				</aside>
+			</section>
+
+			<section data-background-image="./images/UI5Logo_blue_desktop.png">
+				<h2 class="ui5con-divider">Why so much theory?</h2>
+
+				<h2 class="ui5con-divider fragment"><span class="ui5con-orange">Let's build the reactive sample with
+						ES2018</span></h2>
+			</section>
+			<section data-background-iframe="../samples/webcomponents/dist/es2018samples.html"
+				data-background-interactive></section>
+
+			<section data-background-image="./images/UI5Logo_blue_desktop.png" data-markdown>
+				<script type="text/template">
+				# Summary
+				- Learn ES2018 Features <!-- .element: class="fragment" -->
+				- Async flows can be expressed with ES2018 <!-- .element: class="fragment" -->
+				- Rx.js better for complex/special interaction  <!-- .element: class="fragment" -->
+			</script>
+			</section>
+
+			<section data-background-image="./images/UI5Logo_blue_desktop.png">
+				<div class="ui5con-thankyou ui5con-orange">Thank you.</div>
+				<div class="ui5con-logo"></div>
+				<div class="ui5con-speakerdetails">
+					Contact information:<br><br>
+					Sebastian Wennemers <br>
+					<a href="https://twitter.com/S7nW7s">@S7nW7s</a><br>
+					Architect SAPUI5 Flexibility<br>
+				</div>
+			</section>
+
+			<section data-background-image="./images/UI5Logo_blue_desktop.png">
+				<h2>Credits</h2>
+				<ul style="font-size: 32pt;">
+					<li>Dr. Axel Rauschmayer for his great blog posts explaining new JavaScript features, e.g.
+						<ul>
+							<li><a
+									href="http://2ality.com/2016/10/asynchronous-iteration.html">http://2ality.com/2016/10/asynchronous-iteration.html</a>
+							</li>
+						</ul>
+					</li>
+					<li>Andre Staltz and Gleb Bahmutov for his great blog posts explaining reactive programming, e.g.
+						<ul>
+							<li><a
+									href="https://gist.github.com/staltz/868e7e9bc2a7b8c1f754">https://gist.github.com/staltz/868e7e9bc2a7b8c1f754</a>
+							</li>
+							<li><a
+									href="https://staltz.com/javascript-getter-setter-pyramid.html">https://staltz.com/javascript-getter-setter-pyramid.html</a>
+							</li>
+							<li><a
+									href="http://github.com/bahmutov/draw-cycle">http://github.com/bahmutov/draw-cycle</a>
+							</li>
+							<li><a
+									href="https://glebbahmutov.com/blog/cycle-conf/">https://glebbahmutov.com/blog/cycle-conf/</a>
+							</li>
+						</ul>
+					</li>
+					<li>Benjamin Gruenbaum and Jamie McCrindle for some inspiration on using async iterators<ul>
+							<li><a
+									href="https://docs.google.com/presentation/d/1r2V1sLG8JSSk8txiLh4wfTkom-BoOsk52FgPBy8o3RM">https://docs.google.com/presentation/d/1r2V1sLG8JSSk8txiLh4wfTkom-BoOsk52FgPBy8o3RM</a>
+							</li>
+							<li><a
+									href="https://github.com/jamiemccrindle/axax/blob/master/docs/API.md">https://github.com/jamiemccrindle/axax/blob/master/docs/API.md</a>
+							</li>
+						</ul>
+					</li>
+					<li>Domenic Denicola and Kevin Smith for championing the TC39 proposal for async-iteration<ul>
+							<li><a
+									href="https://github.com/tc39/proposal-async-iteration">https://github.com/tc39/proposal-async-iteration</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+		</div>
+	</div>
+
+	<script src="js/reveal.js"></script>
+	<script src="index.js"></script>
+
+</body>
+
+</html>
