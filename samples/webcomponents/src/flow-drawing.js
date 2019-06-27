@@ -3,6 +3,28 @@ import "@ui5/webcomponents/dist/Input";
 import "@ui5/webcomponents/dist/InputSuggestions"; //included to allow merging with autocomplete sample
 import "../../../slides/plugin/highlight/highlight.js";
 hljs.initHighlightingOnLoad();
+function scale($Pre, sTranslateXY) {
+	if ($Pre.style.transform == ""){
+	  $Pre.style.transform = "translate(" + sTranslateXY + ") scale(1.5)";
+	} else {
+	  $Pre.style.transform = "";
+	}
+}
+function scaleLiveSearch(oClickEvent) {
+	if(oClickEvent.target.id !== "suggestions-input"){
+		var $Pre = document.getElementById("liveSearchCode");
+		scale($Pre, "-100px, 50px");
+	}
+}
+function scaleFlow(oClickEvent) {
+	if(oClickEvent.target.id !== "decrement" || oClickEvent.target.id === "increment"){
+		//don't do it on UI5 controls
+		var $Pre = document.getElementById("flowCode");
+		scale($Pre, "200px, -230px");
+	}
+}
+document.getElementById("asyncFlow").addEventListener("click", scaleFlow);
+document.getElementById("liveSearch").addEventListener("click", scaleLiveSearch);
 
 import {fromEvent}  from "./utils/operators.js";
 import {merge} from "./utils/operators.js";
@@ -14,8 +36,8 @@ function drawing($minus, $plus){
 			var w = window,
 			d = document,
 			e = d.documentElement,
-			g = d.getElementsByTagName('body')[0],
-			x = w.innerWidth || e.clientWidth || g.clientWidth,
+			g = d.getElementById('asyncFlow'),
+			x = g.clientWidth,
 			y = w.innerHeight|| e.clientHeight|| g.clientHeight;
 
 			if (y < 700) {
@@ -92,28 +114,28 @@ function drawing($minus, $plus){
 			window.drawing = {};
 			drawing.moveEvent = moveEvent;
 
-			var decClicks = paper.rect(400, 150, 100, 50)
+			var decClicks = paper.rect(300, 150, 100, 50)
 			decClicks.attr('fill', '#ffe')
 			decClicks.attr('stroke', '#f00')
-			var decClicksText = paper.text(450, 175)
+			var decClicksText = paper.text(350, 175)
 			decClicksText.attr({ text: 'eventToValue\nev => -1', 'font-size': '14px' })
-			var decrementsText = paper.text(550, 160)
+			var decrementsText = paper.text(450, 160)
 			decrementsText.attr({ text: 'decrement iterator', 'font-size': '12px' })
 
-			var incClicks = paper.rect(400, 250, 100, 50)
+			var incClicks = paper.rect(300, 250, 100, 50)
 			incClicks.attr('fill', '#ffe')
 			incClicks.attr('stroke', '#f00')
-			var incClicksText = paper.text(450, 275)
+			var incClicksText = paper.text(350, 275)
 			incClicksText.attr({ text: 'eventToValue\nev => +1', 'font-size': '14px' })
-			var incrementsText = paper.text(550, 285)
+			var incrementsText = paper.text(450, 285)
 			incrementsText.attr({ text: 'increment iterator', 'font-size': '12px' })
 
-			var actions = paper.rect(600, 200, 100, 50)
+			var actions = paper.rect(500, 200, 100, 50)
 			actions.attr('fill', '#ffe')
 			actions.attr('stroke', '#f00')
-			var actionsText = paper.text(650, 225)
+			var actionsText = paper.text(550, 225)
 			actionsText.attr({ text: 'merge', 'font-size': '15px' })
-			var actions$Text = paper.text(690, 260)
+			var actions$Text = paper.text(590, 260)
 			actions$Text.attr({ text: 'action iterator', 'font-size': '13px' })
 
 			// paper.connection(circle, circle2, '#00f')
@@ -126,28 +148,28 @@ function drawing($minus, $plus){
 			drawing.c4 = paper.connection(incClicks, actions, '#333')
 
 			// model
-			var scan = paper.rect(550, 400, 100, 50)
+			var scan = paper.rect(450, 360, 100, 80)
 			scan.attr('fill', '#ffe')
 			scan.attr('stroke', '#0f0')
-			var scanText = paper.text(600, 425)
+			var scanText = paper.text(500, 395)
 			scanText.attr({ text: 'count\n += \naction', 'font-size': '15px' })
 
-			var valueText = paper.text(680, 420)
+			var valueText = paper.text(580, 400)
 			valueText.attr({ text: 'value\n0', 'font-size': '15px' })
 			drawing.setValue = function (value) {
 			valueText.attr('text', 'value\n' + value)
 			}
 
-			var count$Text = paper.text(520, 410)
-			count$Text.attr({ text: 'count', 'font-size': '15px' })
+			var count$Text = paper.text(430, 455)
+			count$Text.attr({ text: 'count iterator', 'font-size': '15px' })
 
 			drawing.c5 = paper.connection(actions, scan, '#333')
 
 			// view
-			var vtree = paper.rect(360, 550, 340, 150)
+			var vtree = paper.rect(150, 490, 340, 80)
 			vtree.attr('fill', '#ffe')
 			vtree.attr('stroke', '#00f')
-			var vtreeText = paper.text(370, 625)
+			var vtreeText = paper.text(200, 530)
 			vtreeText.attr({
 			text: 'for await (const count of model){\n'+
 					'    $input.setAttribute("value", i);\n'+
@@ -164,11 +186,11 @@ function drawing($minus, $plus){
 			drawing.c7 = paper.connection(vtree, document.querySelector('#app'), '#333')
 
 			// Intent / Model / View blocks
-			var intentBlock = paper.rect(380, 120, 350, 200)
+			var intentBlock = paper.rect(280, 120, 350, 200)
 			intentBlock.attr({
 			stroke: '#f00'
 			});
-			var intentText = paper.text(700, 130)
+			var intentText = paper.text(600, 130)
 			intentText.attr({
 			text: 'Intent',
 			'font-size': '15px',
@@ -176,11 +198,11 @@ function drawing($minus, $plus){
 			stroke: 'none'
 			})
 
-			var modelBlock = paper.rect(380, 330, 350, 170)
+			var modelBlock = paper.rect(280, 330, 350, 150)
 			modelBlock.attr({
 			stroke: '#0f0'
 			});
-			var modelText = paper.text(700, 340)
+			var modelText = paper.text(600, 340)
 			modelText.attr({
 			text: 'Model',
 			'font-size': '15px',
@@ -188,7 +210,7 @@ function drawing($minus, $plus){
 			stroke: 'none'
 			})
 
-			var viewText = paper.text(650, 560)
+			var viewText = paper.text(480, 500)
 			viewText.attr({
 				text: '',
 				'font-size': '15px',

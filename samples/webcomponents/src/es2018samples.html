@@ -12,9 +12,9 @@
 		}
 
 		#app {
-			margin: 0 50px;
-			width: 300px;
-			height: 300px;
+			margin: 0 20px;
+			width: 200px;
+			height: 200px;
 			border: 1px solid black;
 			transform: translateY(60px);
 		}
@@ -72,7 +72,7 @@
 	<div class="grid-container">
 		<div id="asyncFlow">
 			<h2>ES2018 based Async Data Flow sample - inspired by <a href="http://github.com/bahmutov/draw-cycle"> Draw Cycle </a></h2>
-			<p>Click on "Increment" or "Decrement" buttons and see how the eventstreams are combined.</p>
+			<p>Click on "Increment" or "Decrement" buttons and see how the eventstreams are combined. The event queue is blocked until events are merged.</p>
 
 			<div id="app">
 				<ui5-button id="decrement" style="padding-bottom: 5px; width: 100px;">Decrement</ui5-button><br>
@@ -82,7 +82,7 @@
 
 			<div id="info">
 				<p>
-					<pre><code class="hljs javascript">
+					<pre id="flowCode"><code class="hljs javascript">
 	async function* model(incrementIterator, decrementIterator, startValue) {
 		var count = startValue;
 		for await (const action of merge([incrementIterator, decrementIterator])) {
@@ -113,7 +113,7 @@
 			<div class="sapUiSmallMargin">
 				<p>Async coordination of a live search in few lines:</p>
 				<p>
-					<pre><code class="hljs javascript">
+					<pre id="liveSearchCode"><code class="hljs javascript">
 	async function* getEntries(inputIterator){
 		var tooSoon = false, last;
 		for await(const oEvent of inputIterator){
